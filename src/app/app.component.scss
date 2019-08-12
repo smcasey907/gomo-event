@@ -1,0 +1,36 @@
+.spinner-container {
+    left: 50%;
+    margin-left: -4em;
+    font-size: 10px;
+}
+.spinner-container, .spinner-container:after {
+    border-radius: 50%;
+    width: 8em;
+    height: 8em;
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -4.05em;
+    z-index:9999;
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
+}
+
+.login-inner {
+    padding: 3vh 2vw;
+}
+
+.login-button {
+    display:flex!important;
+    margin: auto;
+}
+
+.more-button {
+    margin-bottom: 3vh;
+    left: 3vw;
+}

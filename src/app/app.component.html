@@ -1,7 +1,52 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to gomo app!
-  </h1>
+<app-toolbar></app-toolbar>
+
+<div class="login" *ngIf="!(auth$ | async) as auth; else display">
+  <mat-card class="login-inner">
+    <p>ADL public LRS</p>
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="form-group">
+        <mat-form-field>
+          <input matInput type="text"
+                  class="form-control"
+                  placeholder="Username"
+                  id="username"
+                  name="username"
+                  [(ngModel)]="username"
+                  required>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field>
+          <input matInput type="text"
+                  class="form-control"
+                  placeholder="Password"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="password"
+                  required>
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary" class="btn btn-success login-button" [disabled]="!form.form.valid || form.form.pristine">LOG IN</button>
+    </form>
+
+  </mat-card>
 </div>
+<ng-template #display>
+  <div class="spinner-container" *ngIf="xas.loading$ | async"><mat-spinner color="accent"></mat-spinner></div>
+  <div class="data-display">
+    <div class="events" *ngFor="let e of events">
+      <ul>
+        <li><b>{{e.actor}}</b>&nbsp;<i>{{e.verb}}</i>&nbsp;<u>{{e.object}}</u></li>
+      </ul>
+    </div>
+    <div *ngIf="!(xas.loading$ | async)">
+        <button mat-raised-button 
+                color="accent" 
+                class="btn btn-success more-button"
+                (click)="getMore()">More...</button>
+    </div>
+  </div>
+</ng-template>
 <router-outlet></router-outlet>
