@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
         this.subscription = this.xas.getAllEvents(this.authHash).subscribe(
           response => {
             for (const record of response) {
-              if (record.object.objectType === 'Activity') {
+              // tslint:disable-next-line:no-string-literal
+              if (record.object['objectType'] === 'Activity') {
                 let actor = this.filterActor(record.actor);
                 const verb = this.filterVerb(record.verb);
                 const object = this.filterObject(record.object);
@@ -39,9 +40,9 @@ export class AppComponent implements OnInit {
                   actor = this.getDefaultId(record);
                 }
                 this.events.push({
-                  'actor': actor,
-                  'verb': verb,
-                  'object': object
+                  actor,
+                  verb,
+                  object
                 });
               }
             }
@@ -62,12 +63,17 @@ export class AppComponent implements OnInit {
     let filteredAction = '';
     if ('name' in act) {
       filteredAction = act.name;
-    } else if('mbox' in act) {
+    } else if ('mbox' in act) {
       filteredAction = act.mbox;
     }
     return filteredAction;
   }
 
+  // Filter Verb information, getting
+  // English value first, then an arbitrary
+  // language if no english is available.
+  // TODO: Clean up the if statements:
+  // it should search if the key contains en
   filterVerb(verb) {
     let filteredVerb = '';
     if ('display' in verb) {
@@ -83,6 +89,11 @@ export class AppComponent implements OnInit {
     return filteredVerb;
   }
 
+  // Filter Object information, getting
+  // English value first, then an arbitrary
+  // language if no english is available.
+  // TODO: Clean up the if statements:
+  // it should search if the key contains en
   filterObject(obj) {
     let filteredObject = '';
     if ('definition' in obj) {
@@ -93,7 +104,7 @@ export class AppComponent implements OnInit {
           filteredObject = obj.definition.name.en;
         } else {
           const arbitraryKey = Object.keys(obj.definition.name)[0];
-          filteredObject = obj.definition.name.arbitraryKey;
+          filteredObject = obj.definition.name[arbitraryKey];
         }
       }
     } else {
@@ -102,6 +113,8 @@ export class AppComponent implements OnInit {
     return filteredObject;
   }
 
+  // If no name or email is available, get the id first from
+  // verb.id, then from object.id
   getDefaultId(val) {
     let defaultId = '';
     if ('id' in val.verb) {
@@ -112,21 +125,23 @@ export class AppComponent implements OnInit {
     return defaultId;
   }
 
+  // Get the next 25 values from API
   getMore() {
     this.subscription = this.xas.getAllEvents(this.authHash).subscribe(
       response => {
         for (const record of response) {
-          if (record.object.objectType === 'Activity') {
+          // tslint:disable-next-line:no-string-literal
+          if (record.object['objectType'] === 'Activity') {
             let actor = this.filterActor(record.actor);
             const verb = this.filterVerb(record.verb);
             const object = this.filterObject(record.object);
             if (actor === '') {
               actor = this.getDefaultId(record);
-            };
+            }
             this.events.push({
-              'actor': actor,
-              'verb': verb,
-              'object': object
+              actor,
+              verb,
+              object
             });
           }
         }
@@ -134,6 +149,9 @@ export class AppComponent implements OnInit {
     );
   }
 
+  /**
+   * Login portion of code here
+   */
   onSubmit() {
     if (this.username !== undefined && this.password !== undefined) {
       this.authHash = 'Basic ' + window.btoa(this.username + ':' + this.password);

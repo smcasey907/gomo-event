@@ -1,5 +1,5 @@
 export interface Xevents {
-    actor: {};
-    verb: {};
-    object: {};
+    actor?: {};
+    verb?: {};
+    object?: {};
 }

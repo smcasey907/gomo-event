@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, finalize, catchError, tap } from 'rxjs/operators';;
+import { map, finalize, catchError, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Xevents } from '../xevents';
 
@@ -13,7 +13,6 @@ export class XApiService {
 
   private xUrl = 'https://lrs.adlnet.gov';
   private optionsUrl = '/xapi/statements?limit=25&format=exact';
-  private auth = 'Basic c21jYXNleToxMjMxMjM=';
 
 
   constructor(
@@ -32,8 +31,10 @@ export class XApiService {
     ).pipe(
       map(response => {
         const events = [];
-        response.statements.forEach(event => events.push({actor: event.actor, verb: event.verb, object: event.object}));
-        this.optionsUrl = response.more;
+        // tslint:disable-next-line:no-string-literal
+        response['statements'].forEach(event => events.push({actor: event.actor, verb: event.verb, object: event.object}));
+        // tslint:disable-next-line:no-string-literal
+        this.optionsUrl = response['more'];
         return events;
       }),
       finalize(() => this.loadingSubject.next(false)),
